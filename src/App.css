@@ -1,0 +1,25 @@
+#root {
+  height: 100vh;
+}
+.sample {
+  width: 100%;
+  height: 100%;
+  background-color: #aeee;
+  position: relative;
+  padding-bottom: 80px;
+}
+
+.sample .ground {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 84px;
+  background-color: #4aa62b;
+}
+
+.sample img {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+}
