@@ -1,8 +1,11 @@
 import "./App.css";
 import useMario from "./hooks/useMario";
+import bgMusic from "./assets/bg.mp3";
+import useMusic from "./hooks/useMusic";
 
 function App() {
   const { mario } = useMario();
+  useMusic(bgMusic);
 
   return (
     <div className="sample">
