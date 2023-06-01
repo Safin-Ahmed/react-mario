@@ -5,12 +5,17 @@ function App() {
   const [mario, setMario] = useState({
     x: 0,
     y: 0,
-    vx: 0,
-    vy: 0,
     dir: "right",
     isMoving: false,
     isJump: false,
   });
+
+  const moveMario = () => {
+    setMario((state) => ({
+      ...state,
+      x: state.dir === "right" ? state.x + 10 : state.x - 10,
+    }));
+  };
 
   const handleKeyDown = (e) => {
     e.preventDefault();
@@ -25,22 +30,10 @@ function App() {
       });
     }
 
-    if (e.keyCode === 38 && e.keyCode === 39) {
-      console.log("Both keys pressed");
-      setMario((state) => {
-        return {
-          ...state,
-          isMoving: true,
-          isJump: true,
-        };
-      });
-    }
     if (e.keyCode === 39) {
       setMario((state) => {
         return {
           ...state,
-          vx: state.vx + 20,
-          x: state.x + 10,
           isMoving: true,
           dir: "right",
         };
@@ -51,7 +44,6 @@ function App() {
       setMario((state) => {
         return {
           ...state,
-          x: state.x - 10,
           isMoving: true,
           dir: "left",
         };
@@ -61,21 +53,30 @@ function App() {
 
   const handleKeyUp = (e) => {
     e.preventDefault();
-    // if (e.keyCode === 38) {
-    //   setMario((state) => {
-    //     return {
-    //       ...state,
-    //       y: 0,
-    //     };
-    //   });
-    // }
+    if (e.keyCode === 38) {
+      setMario((state) => {
+        return {
+          ...state,
+          isJump: false,
+        };
+      });
+    }
 
-    return setMario((state) => {
-      return {
-        ...state,
-        isMoving: false,
-      };
-    });
+    if (e.keyCode === 37 || e.keyCode === 39) {
+      setMario((state) => {
+        return {
+          ...state,
+          isMoving: false,
+        };
+      });
+    }
+
+    // return setMario((state) => {
+    //   return {
+    //     ...state,
+    //     isMoving: false,
+    //   };
+    // });
   };
 
   const animateJump = () => {
@@ -128,10 +129,25 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log(mario.isJump);
     if (mario.isJump) {
       animateJump();
     }
   }, [mario.isJump]);
+
+  useEffect(() => {
+    let moveInterval;
+
+    if (mario.isMoving) {
+      moveInterval = setInterval(moveMario, 100);
+    } else {
+      clearInterval(moveInterval);
+    }
+
+    return () => {
+      clearInterval(moveInterval);
+    };
+  }, [mario.isMoving]);
 
   return (
     <div className="sample">
@@ -142,7 +158,7 @@ function App() {
         }_${mario.dir}.gif`}
         alt=""
         style={{
-          left: 100 + Math.round(mario.x),
+          left: 100 + mario.x,
           bottom: 78 + mario.y,
           transition: "all 0.5s ease-out",
         }}
